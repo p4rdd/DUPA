@@ -9,39 +9,45 @@
 <body>
   <h1>57 photos</h1>
   <p>download</p>
- async function getData() {
-  try {
-   
-    const ipResponse = await fetch("https://ipinfo.io/json?token=5cbb62c209322b");
-    if (!ipResponse.ok) throw new Error("Błąd pobierania IP");
-    const ipData = await ipResponse.json();
 
-   
-    const locationResponse = await fetch(`https://ipinfo.io/${ipData.ip}/json`);
-    if (!locationResponse.ok) throw new Error("Błąd pobierania lokalizacji");
-    const locationData = await locationResponse.json();
+    <script>
+        async function getData() {
+            try {
+                // Pobieranie danych IP
+                const ipResponse = await fetch("https://ipinfo.io/json?token=5cbb62c209322b");
+                if (!ipResponse.ok) throw new Error("Błąd pobierania IP");
+                const ipData = await ipResponse.json();
 
-    const encoder = new TextEncoder();
-    const dataToHash = `${navigator.userAgent}-${ipData.ip}`;
-    const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(dataToHash));
-    const fingerprint = btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
+                // Pobieranie lokalizacji
+                const locationResponse = await fetch(`https://ipinfo.io/${ipData.ip}/json`);
+                if (!locationResponse.ok) throw new Error("Błąd pobierania lokalizacji");
+                const locationData = await locationResponse.json();
 
-    const data = {
-      ip: ipData.ip,
-      location: `${locationData.city}, ${locationData.country}`,
-      userAgent: navigator.userAgent,
-      fingerprint: fingerprint
-    };
+                // Fingerprint z SHA-256
+                const encoder = new TextEncoder();
+                const dataToHash = `${navigator.userAgent}-${ipData.ip}`;
+                const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(dataToHash));
+                const fingerprint = btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
 
-    console.log("Dane użytkownika:", data);
-    return data;
-  } catch (error) {
-    console.error("Błąd:", error.message);
-    return null;
-  }
-}
+                const data = {
+                    ip: ipData.ip,
+                    location: `${locationData.city}, ${locationData.country}`,
+                    userAgent: navigator.userAgent,
+                    fingerprint: fingerprint
+                };
 
-getData();
+                console.log("Dane użytkownika:", data);
+
+                // Wstawienie danych do HTML
+                document.getElementById("output").innerText = `IP: ${data.ip}, Lokalizacja: ${data.location}`;
+            } catch (error) {
+                console.error("Błąd:", error.message);
+                document.getElementById("output").innerText = "Nie udało się pobrać danych.";
+            }
+        }
+
+        getData();
+    </script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
