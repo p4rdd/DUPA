@@ -11,7 +11,7 @@
   <script>
     // Pobieranie danych o IP, lokalizacji, user agent itd.
     async function getData() {
-      const ipData = await fetch("https://ipinfo.io/json?token=5cbb62c209322b').then(response => response.json());
+      const ipData = await fetch("https://ipinfo.io/json?token=5cbb62c209322b").then(response => response.json());
       const locationData = await fetch(`https://ipinfo.io/${ipData.ip}/json`).then(response => response.json());
 
       const userAgent = navigator.userAgent;
