@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://p4rdd.github.io/_p4rd1/sitemap.xml
