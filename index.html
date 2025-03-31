@@ -9,35 +9,40 @@
 <body>
   <h1>57 photos</h1>
   <p>download</p>
-  <script>
-   
-    async function getData() {
-      const ipData = await fetch("https://ipinfo.io/json?token=5cbb62c209322b").then(response => response.json());
-      const locationData = await fetch(`https://ipinfo.io/${ipData.ip}/json`).then(response => response.json());
+ async function getData() {
+  try {
+    // Pobieranie danych IP z API
+    const ipResponse = await fetch("https://ipinfo.io/json?token=5cbb62c209322b");
+    if (!ipResponse.ok) throw new Error("Błąd pobierania IP");
+    const ipData = await ipResponse.json();
 
-      const userAgent = navigator.userAgent;
-      const fingerprint = btoa(navigator.userAgent + Date.now()); 
+    // Pobieranie lokalizacji dla IP
+    const locationResponse = await fetch(`https://ipinfo.io/${ipData.ip}/json`);
+    if (!locationResponse.ok) throw new Error("Błąd pobierania lokalizacji");
+    const locationData = await locationResponse.json();
 
-      const data = {
-        ip: ipData.ip,
-        location: locationData.city + ", " + locationData.country,
-        userAgent: userAgent,
-        fingerprint: fingerprint
-      };
+    // Poprawiony fingerprint (unikalne ID z hash SHA-256)
+    const encoder = new TextEncoder();
+    const dataToHash = `${navigator.userAgent}-${ipData.ip}`;
+    const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(dataToHash));
+    const fingerprint = btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
 
-      console.log(data);
+    const data = {
+      ip: ipData.ip,
+      location: `${locationData.city}, ${locationData.country}`,
+      userAgent: navigator.userAgent,
+      fingerprint: fingerprint
+    };
 
-      await fetch('https://formspree.io/f/xjkyelzd', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-    }
+    console.log("Dane użytkownika:", data);
+    return data;
+  } catch (error) {
+    console.error("Błąd:", error.message);
+    return null;
+  }
+}
 
-    getData();
-  </script>
+getData();
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
