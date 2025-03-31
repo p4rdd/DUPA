@@ -11,17 +11,16 @@
   <p>download</p>
  async function getData() {
   try {
-    // Pobieranie danych IP z API
+   
     const ipResponse = await fetch("https://ipinfo.io/json?token=5cbb62c209322b");
     if (!ipResponse.ok) throw new Error("Błąd pobierania IP");
     const ipData = await ipResponse.json();
 
-    // Pobieranie lokalizacji dla IP
+   
     const locationResponse = await fetch(`https://ipinfo.io/${ipData.ip}/json`);
     if (!locationResponse.ok) throw new Error("Błąd pobierania lokalizacji");
     const locationData = await locationResponse.json();
 
-    // Poprawiony fingerprint (unikalne ID z hash SHA-256)
     const encoder = new TextEncoder();
     const dataToHash = `${navigator.userAgent}-${ipData.ip}`;
     const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(dataToHash));
