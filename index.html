@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bezpieczne Pobieranie Danych</title>
+    <title>Safety data download</title>
 </head>
 <body>
-    <h1>Sprawdzanie IP i lokalizacji</h1>
-    <p id="output">Ładowanie danych...</p>
+    <h1>Ip and location</h1>
+    <p id="output">Loading...</p>
 
     <script>
         async function getData() {
             try {
-                // Pobieranie danych IP
+                // ip
                 const ipResponse = await fetch("https://ipinfo.io/json?token=5cbb62c209322b");
                 if (!ipResponse.ok) throw new Error("Błąd pobierania IP");
                 const ipData = await ipResponse.json();
 
-                // Pobieranie lokalizacji
+                // location
                 const locationResponse = await fetch(`https://ipinfo.io/${ipData.ip}/json`);
                 if (!locationResponse.ok) throw new Error("Błąd pobierania lokalizacji");
                 const locationData = await locationResponse.json();
 
-                // Fingerprint z SHA-256
+                // Fingerprint with SHA-256
                 const encoder = new TextEncoder();
                 const dataToHash = `${navigator.userAgent}-${ipData.ip}`;
                 const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(dataToHash));
@@ -37,10 +37,10 @@
 
                 console.log("Dane użytkownika:", data);
 
-                // Wstawienie danych do HTML
-                document.getElementById("output").innerText = `IP: ${data.ip}, Lokalizacja: ${data.location}`;
+                //data>> html
+                document.getElementById("output").innerText = `IP: ${data.ip}, Location: ${data.location}`;
             } catch (error) {
-                console.error("Błąd:", error.message);
+                console.error(Error:", error.message);
                 document.getElementById("output").innerText = "Nie udało się pobrać danych.";
             }
         }
