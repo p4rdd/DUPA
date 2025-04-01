@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety data download</title>
+    <title>Safe data download</title>
 </head>
 <body>
     <h1>Ip and location</h1>
@@ -14,12 +14,12 @@
             try {
                 // ip
                 const ipResponse = await fetch("https://ipinfo.io/json?token=5cbb62c209322b");
-                if (!ipResponse.ok) throw new Error("Błąd pobierania IP");
+                if (!ipResponse.ok) throw new Error("error fetch ip");
                 const ipData = await ipResponse.json();
 
                 // location
                 const locationResponse = await fetch(`https://ipinfo.io/${ipData.ip}/json`);
-                if (!locationResponse.ok) throw new Error("Błąd pobierania lokalizacji");
+                if (!locationResponse.ok) throw new Error("error fetch location");
                 const locationData = await locationResponse.json();
 
                 // Fingerprint with SHA-256
